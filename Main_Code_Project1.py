@@ -19,7 +19,7 @@ while True:
         length = int(input("Enter your box length(mm): "))
         width = int(input("Enter your box width(mm): "))
         height = int(input("Enter your box height(mm): "))
-        #engrave = 
+        
         break
     #Error message to display in case the input is not a whole integer
     except ValueError:
@@ -44,24 +44,29 @@ nut_thick = .063 * 25.4 #Nut thickness
 mat_thick = .125 * 25.4 #Cardboard Thickness
 
 #Margins of Box Outline
-w_marg = 40 #width margin
-h_marg = 40 #height margin
-l_marg = 40 #length margin
+w_marg = 60 #width margin
+h_marg = 60 #height margin
+l_marg = 60 #length margin
 
 #Positioning of Box Faces
 BL = np.zeros((6,2)) #Matrix with all values
+#First Row
 #Face 1 (w x h)
 BL[0,0], BL[0,1] = width/2 + w_marg, height/2 + h_marg
 #Face 2 (w x h)
 BL[1,0], BL[1,1] = BL[0,0] + width + w_marg, BL[0,1]
-#Face 3 (l x h)
-BL[2,0], BL[2,1] = BL[0,0], BL[0,1] + height + h_marg
-#Face 4 (l x h)
-BL[3,0], BL[3,1] = BL[2,0] + length + l_marg, BL[2,1]
+
+#Second Row
 #Face 5 (TOP) (l x w)
-BL[4,0], BL[4,1] = BL[3,0] + length + l_marg, BL[3,1]
-#Face 6 (BOTTOM)
-BL[5,0], BL[5,1] = BL[4,0] + + length + l_marg, BL[4,1]
+BL[4,0], BL[4,1] = length/2 + l_marg, BL[0,1] + height/2 + width/2 + w_marg
+#Face 6 (BOTTOM) (1 x w)
+BL[5,0], BL[5,1] = BL[4,0] + length + l_marg, BL[4,1]
+
+#Third Row
+#Face 3 (l x h)
+BL[2,0], BL[2,1] = length/2 + l_marg, BL[4,1] + width/2 + height/2  + h_marg
+#Face 4 (l x h)
+BL[3,0], BL[3,1] = BL[2,0] + length + l_marg , BL[4,1] + width/2 + height/2  + h_marg
 
 #Box Face - Type I (Circumferential) (Qty:4) (faces using Width, Height and Length)
 def boxface_t1(x_t1, y_t1, L1, L2): 
