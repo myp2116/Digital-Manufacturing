@@ -16,8 +16,9 @@ Created on Sun Feb  4 16:34:02 2024
 #Output
     #SVG code of custom Box
 
-#import Python Numpy to aid in array operations
+#import Python Numpy anf math to aid in array operations
 import numpy as np
+import math
 
 #Code for Input Criteria
 
@@ -44,7 +45,6 @@ def getinputs():
             if length < 50:
                 print("Length inputed is too small. Please Try Again")
                 continue
-            
             width = float(input("Enter the Width in mm: "))
             if width < 50:
                 print("Width inputed is too small. Please Try Again")
@@ -71,12 +71,14 @@ def getinputs():
                 print("You've reach the maximum amount of characters. Please Try Again")
                 continue
             
-            return texttop, textfront, length, width, height
+            frac1_iter = int(input("Enter the Total Number of Fractal Interations for Pattern #1: "))
 
+            return texttop, textfront, length, width, height, frac1_iter
+            
         except ValueError:
             print("Error: Invalid input. Please enter valid numbers.")
 
-texttop, textfront, length, width, height = getinputs()        
+texttop, textfront, length, width, height, frac1_iter = getinputs()        
 
 #Code to Generate SVG file for Box
 
@@ -290,7 +292,7 @@ else:
     
 
 f.write(f'<text x="{dmx}" y="{dmy}" font-family="Brush Script MT" font-size="{dmfontsize}" font-weight="bold" fill="red">{textfront}</text>\n')
-f.write(f'<image href="/Users/davidgordon/Documents/Python DM/CUlogored.png" x="{xculogo}" y="{yculogo}" width="{xcusz}" height="{ycusz}" />\n')
+f.write(f'<image href="/Users/Max/Google Drive/School/Graduate/Columbia/Spring 2024/Digital Manufacturing/Projects/Laser Cut Project/Code/CUlogored.png" x="{xculogo}" y="{yculogo}" width="{xcusz}" height="{ycusz}" />\n')
 f.write(f'<text x="{dmx}" y="{uniy}" font-family="Brush Script MT" font-size="{dmfontsize}" font-weight="bold" fill="red">Digital Manufacturing</text>\n')
 
 
@@ -302,6 +304,26 @@ f.write(f'<text x="{xname}" y="{yname}" font-family="Comic Sans MS" font-size="{
 f.write(f'<text x="{xname}" y="{ybox}" font-family="Comic Sans MS" font-size="{namefont}" font-weight="bold" fill="red">box</text>\n')
 
 
+#Factal Parameters For Pattern Number 1
+frac_inc = (2*math.pi)/frac1_iter
+frac_rad = 5 #Radius of circle used for fractal pattern
+frac_marg = 10 #Edge margin for fractal pattern
+
+#IF statment to understand what the critical edge dimension is
+if width/2 <= (height/2 -fast_length):
+    frac_rad_pos = width/2 - mat_thick - frac_rad - frac_marg
+else:
+    frac_rad_pos = height/2 - mat_thick - frac_rad - fast_length - frac_marg
+
+#Initiate fractal pattern starting coordinates
+frac_nx = BL[1,0] + frac_rad_pos
+frac_ny = BL[1,1]
+
+#Fractal pattern generator
+for i in range(frac1_iter+1):
+    f.write(f'<circle cx="{BL[1,0] - frac_nx}" cy="{BL[1,1] - frac_ny}" r="{frac_rad}" stroke="red" stroke-width="1" fill="none" /> \n')
+    frac_nx = frac_rad_pos * math.cos((frac_inc * i))
+    frac_ny = frac_rad_pos * math.sin((frac_inc * i))
 
 #Close code string
 f.write(f'</svg>')
