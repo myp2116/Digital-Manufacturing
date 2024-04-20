@@ -52,9 +52,11 @@ data = [";Group 18 gcode Generator", #Header text
         "M83", #Extruder head set to relative mode
         ]
 #Position extruder to initial position relative to 0,0,0 in prep for triangle outline
+xcenter = (bed_w/2)
+ycenter = (bed_l/2)
+z = layer_h1 
 x = (bed_w/2)-(tri_b/2)
 y = (bed_l/2)-(tri_h/2)
-z = layer_h1 
 
 #Loop to build object
 for i in range(steps):
@@ -63,50 +65,50 @@ for i in range(steps):
 
         #side 1
         theta1 = 210 * (math.pi/180) + angle_t*i #Iterated angle
-        x += t_hypo * math.cos(theta1)
-        y += t_hypo * math.sin(theta1)
+        x = xcenter + t_hypo * math.cos(theta1)
+        y = ycenter + t_hypo * math.sin(theta1)
         data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_1, f1),] #Extrude Step
         
         #side 2
         theta2 = 330 * (math.pi/180) + angle_t*i #Iterated angle
-        x += t_hypo * math.cos(theta2)
-        y += t_hypo * math.sin(theta2)
+        x = xcenter + t_hypo * math.cos(theta2)
+        y = ycenter + t_hypo * math.sin(theta2)
         data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_1, f1),] #Extrude Step
         
         #side 3
         theta3 = 90 * (math.pi/180) + angle_t*i #Iterated angle
-        x += t_hypo * math.cos(theta3)
-        y += t_hypo * math.sin(theta3)
+        x = xcenter + t_hypo * math.cos(theta3)
+        y = ycenter + t_hypo * math.sin(theta3)
         data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_1, f1),] #Extrude Step
 
         #Raise up to next layer
-        z+=layer_h2
+        z += layer_h2
         #dwell for 20 seconds between materials
         data += ["G4 S20"]
 
     else: #Material 2 extrusion operation
         data += ["G0 X{} Y{} Z{}".format(x,y,z),] #moves extruder to next point
 
-        #side 1
+         #side 1
         theta1 = 210 * (math.pi/180) + angle_t*i #Iterated angle
-        x += t_hypo * math.cos(theta1)
-        y += t_hypo * math.sin(theta1)
+        x = xcenter + t_hypo * math.cos(theta1)
+        y = ycenter + t_hypo * math.sin(theta1)
         data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_2, f2),] #Extrude Step
         
         #side 2
         theta2 = 330 * (math.pi/180) + angle_t*i #Iterated angle
-        x += t_hypo * math.cos(theta2)
-        y += t_hypo * math.sin(theta2)
+        x = xcenter + t_hypo * math.cos(theta2)
+        y = ycenter + t_hypo * math.sin(theta2)
         data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_2, f2),] #Extrude Step
         
         #side 3
         theta3 = 90 * (math.pi/180) + angle_t*i #Iterated angle
-        x += t_hypo * math.cos(theta3)
-        y += t_hypo * math.sin(theta3)
+        x = xcenter + t_hypo * math.cos(theta3)
+        y = ycenter + t_hypo * math.sin(theta3)
         data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_2, f2),] #Extrude Step
 
         #Raise up to next layer
-        z+=layer_h1
+        z += layer_h1
         #dwell for 20 seconds between materials
         data += ["G4 S20"]
 
