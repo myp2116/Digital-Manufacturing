@@ -54,32 +54,36 @@ data = [";Group 18 gcode Generator", #Header text
 #Position extruder to initial position relative to 0,0,0 in prep for triangle outline
 xcenter = (bed_w/2)
 ycenter = (bed_l/2)
+
+#x = (bed_w/2)-(tri_b/2)
+#y = (bed_l/2)-(tri_h/2)
 z = layer_h1 
-x = (bed_w/2)-(tri_b/2)
-y = (bed_l/2)-(tri_h/2)
 
 #Loop to build object
 for i in range(steps):
     if i % 2 == 0: #Material 1 extrusion operation, this checks to see if iteration is an even number 
-        data += ["G0 X{} Y{} Z{}".format(x,y,z),] #moves extruder to next point
-
+        
         #side 1
         theta1 = 210 * (math.pi/180) + angle_t*i #Iterated angle
-        x = xcenter + t_hypo * math.cos(theta1)
-        y = ycenter + t_hypo * math.sin(theta1)
-        data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_1, f1),] #Extrude Step
+        x1 = xcenter + t_hypo * math.cos(theta1)
+        y1 = ycenter + t_hypo * math.sin(theta1)
+        data += ["G0 X{} Y{} Z{}".format(x1,y1,z),] #moves extruder to next point with extrusion
+
+        #data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_1, f1),] #Extrude Step
         
         #side 2
         theta2 = 330 * (math.pi/180) + angle_t*i #Iterated angle
-        x = xcenter + t_hypo * math.cos(theta2)
-        y = ycenter + t_hypo * math.sin(theta2)
-        data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_1, f1),] #Extrude Step
+        x2 = xcenter + t_hypo * math.cos(theta2)
+        y2 = ycenter + t_hypo * math.sin(theta2)
+        data += ["G1 X{} Y{} Z{} E{} F{}".format(x2,y2,z,e_rate_1, f1),] #Extrude Step
         
         #side 3
         theta3 = 90 * (math.pi/180) + angle_t*i #Iterated angle
-        x = xcenter + t_hypo * math.cos(theta3)
-        y = ycenter + t_hypo * math.sin(theta3)
-        data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_1, f1),] #Extrude Step
+        x3 = xcenter + t_hypo * math.cos(theta3)
+        y3 = ycenter + t_hypo * math.sin(theta3)
+        data += ["G1 X{} Y{} Z{} E{} F{}".format(x3,y3,z,e_rate_1, f1),] #Extrude Step
+
+        data+= ["G1 X{} Y{} Z{} E{} F{}".format(x1,y1,z,e_rate_1, f1),] #Extrude Step (to complete the triangle)
 
         #Raise up to next layer
         z += layer_h2
@@ -87,25 +91,26 @@ for i in range(steps):
         data += ["G4 S20"]
 
     else: #Material 2 extrusion operation
-        data += ["G0 X{} Y{} Z{}".format(x,y,z),] #moves extruder to next point
 
          #side 1
         theta1 = 210 * (math.pi/180) + angle_t*i #Iterated angle
-        x = xcenter + t_hypo * math.cos(theta1)
-        y = ycenter + t_hypo * math.sin(theta1)
-        data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_2, f2),] #Extrude Step
+        x1 = xcenter + t_hypo * math.cos(theta1)
+        y1 = ycenter + t_hypo * math.sin(theta1)
+        data += ["G0 X{} Y{} Z{} E{} F{}".format(x1,y1,z,e_rate_2, f2),] #Extrude Step
         
         #side 2
         theta2 = 330 * (math.pi/180) + angle_t*i #Iterated angle
-        x = xcenter + t_hypo * math.cos(theta2)
-        y = ycenter + t_hypo * math.sin(theta2)
-        data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_2, f2),] #Extrude Step
+        x2 = xcenter + t_hypo * math.cos(theta2)
+        y2 = ycenter + t_hypo * math.sin(theta2)
+        data += ["G1 X{} Y{} Z{} E{} F{}".format(x2,y2,z,e_rate_2, f2),] #Extrude Step
         
         #side 3
         theta3 = 90 * (math.pi/180) + angle_t*i #Iterated angle
-        x = xcenter + t_hypo * math.cos(theta3)
-        y = ycenter + t_hypo * math.sin(theta3)
-        data += ["G1 X{} Y{} Z{} E{} F{}".format(x,y,z,e_rate_2, f2),] #Extrude Step
+        x3 = xcenter + t_hypo * math.cos(theta3)
+        y3 = ycenter + t_hypo * math.sin(theta3)
+        data += ["G1 X{} Y{} Z{} E{} F{}".format(x3,y3,z,e_rate_2, f2),] #Extrude Step
+
+        data += ["G1 X{} Y{} Z{} E{} F{}".format(x1,y1,z,e_rate_1, f1),] #Extrude Step (to complete the triangle)
 
         #Raise up to next layer
         z += layer_h1
